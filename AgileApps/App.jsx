@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import Navbar from './components/index';
-import AppPreview from './components/AppPreview';
 import './style.css'
 import {
   StyleSheet,
@@ -15,7 +14,7 @@ export default function App() {
   const [data, setData] = useState([]);
 
   function handleClick() {
-    fetch('http://127.0.0.1:8000/api/', { method: "GET" })
+    fetch('http://127.0.0.1:8000/api/?format=json', { method: "GET" })
       .then(response => response.json())
       .then(json => setData(json));
   }
@@ -47,7 +46,7 @@ export default function App() {
                 {e.platforms.map(p =>
                   <a href={p.link} target="_blank">{p.name} </a>
                 )}
-                <td>{e.price}</td>
+                <td>{e.price == 0 ? 'Free' : '$'  + e.price.toFixed(2)}</td>
               </tr>
             ))}
           </tbody>
