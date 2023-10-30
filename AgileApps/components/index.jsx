@@ -6,8 +6,7 @@ const Navbar = () => {
     return (
         <div className="topnav">
             <ul>
-                <li><a href="/">Agile Apps</a></li>
-                <li><a href="/" target="_blank">Logout</a></li>
+                <li key='0'><a href="/">Agile Apps</a></li>
             </ul>
         </div>
     );

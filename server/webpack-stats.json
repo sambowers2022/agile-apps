@@ -1,0 +1,14 @@
+{
+  "status": "done",
+  "assets": {
+    "bundle.js": {
+      "name": "bundle.js",
+      "path": "/home/sam/cse201/agile-apps/server/frontend/static/frontend/bundle.js"
+    }
+  },
+  "chunks": {
+    "frontend": [
+      "bundle.js"
+    ]
+  }
+}
