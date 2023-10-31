@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-function NewApp() {
+function NewApp(props) {
     const [formData, setFormData] = useState({
         name: '',
         desc: '',
@@ -49,8 +49,10 @@ function NewApp() {
         });
         if (response.ok) {
             // Handle success
+            props.site("");
         } else {
             // Handle error
+            alert("Request Failed. Try Again.")
         }
     };
 

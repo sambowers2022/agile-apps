@@ -1,13 +1,66 @@
+from django.db import IntegrityError
+from django.http import HttpResponseBadRequest, HttpResponseNotFound, JsonResponse
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.pagination import PageNumberPagination
-
+from rest_framework.decorators import api_view
+from rest_framework.authtoken.models import Token
 from .serializers import AppSerializer
-from .models import App
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth import authenticate
 
+from .models import App, User, Token
 
+def auth(token, auth):
+    return Token.objects.get(token=token).user.access_level >= auth
+
+@api_view(['POST'])
+def register(request):
+    username = request.data.get('name')
+    password = request.data.get('pwd')
+
+    try:
+        user = User.objects.create_user(username, password)
+        token = Token.objects.create(user=user)
+        return Response({'token': token.token,'message': 'User created successfully'}, status=status.HTTP_201_CREATED)
+    except IntegrityError:
+        return Response({'error': 'Username already exists'}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+@csrf_exempt
+def login(request):
+    username = request.data.get('name')
+    password = request.data.get('pwd')
+    print(username, password)
+    
+    try:
+        user = User.objects.get(username=username)
+        if user.check_password(password):
+            token, c = Token.objects.get_or_create(user=user)
+            print(token.token)
+            response_data = {'token': token.token}
+            return Response({'token': token.token, 'auth': user.access_level, 'message': 'Login successfull.'}, status=status.HTTP_200_OK)
+        else:
+            return HttpResponseBadRequest()
+    except User.DoesNotExist:
+        return HttpResponseNotFound()
+
+        
+def api_view(request):
+    token = request.META.get('HTTP_AUTHORIZATION')
+    if not token:
+        return HttpResponseBadRequest()
+    
+    try:
+        token_obj = Token.objects.get(token=token)
+        user = token_obj.user
+        # Access user and access level
+    except Token.DoesNotExist:
+        return HttpResponseBadRequest()  
+        
+    # Return API response
 
 class AppListView(APIView):
 
@@ -37,6 +90,10 @@ class AppApprovalView(APIView):
         return Response(serializer.data)
 
     def post(self, request):
+
+        if (not auth(request.data.get('token'), 3)):
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
         app_id = request.data.get('id')
         approved = request.data.get('approved')
 

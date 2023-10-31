@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-export default function Admin() {
+export default function Admin(props) {
     const [data, setData] = useState([]);
 
     const fetchData = () => {
@@ -21,7 +21,7 @@ export default function Admin() {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ id, approved: true }),
+            body: JSON.stringify({ id, approved: true, token: props.token}),
         })
             .then(response => {
                 if (response.ok) {
@@ -38,7 +38,7 @@ export default function Admin() {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ id, approved: false }),
+            body: JSON.stringify({ id, approved: false, token: props.token }),
         })
             .then(response => {
                 if (response.ok) {
