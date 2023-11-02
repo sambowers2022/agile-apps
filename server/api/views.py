@@ -63,11 +63,9 @@ def api_view(request):
     # Return API response
 
 class AppListView(APIView):
-
-
     def get(self, request):
         page = int(request.GET.get('page', 1))  # Get the requested page number from the query parameters
-        page_size = 24  # Define the number of items per page
+        page_size = 10  # Define the number of items per page
 
         # Calculate the starting and ending indices for the pagination
         start_index = (page - 1) * page_size
@@ -82,6 +80,8 @@ class AppListView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def delete(self, request):
+        return Response()
 
 class AppApprovalView(APIView):
     def get(self, request):

@@ -48,7 +48,6 @@ function MainApp() {
           {token != '' ?
             <>
               <li key='1'><a href="#" onClick={() => setSite("NewApp")}>New App</a></li>
-              {/* Add logic to hide Admin Menu */}
               {auth >= 2 ? <li key='2'><a href="#" onClick={() => setSite("Admin")}>Admin</a></li> : <></>}
             </> : <></>}
           <li key='2' id="login">{token == '' ? <a href="#" onClick={() => setSite("Login")}>Login</a> : <a href="#" onClick={() => {
