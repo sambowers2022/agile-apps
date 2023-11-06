@@ -1,5 +1,5 @@
 from django.db import IntegrityError
-from django.http import HttpResponseBadRequest, HttpResponseNotFound, JsonResponse
+from django.http import HttpResponseBadRequest, HttpResponseNotFound
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -7,10 +7,9 @@ from rest_framework import status
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.decorators import api_view
 from rest_framework.authtoken.models import Token
-from .serializers import AppSerializer
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth import authenticate
 
+from .serializers import AppSerializer
 from .models import App, User, Token
 
 def auth(token, auth):
