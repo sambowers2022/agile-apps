@@ -16,5 +16,11 @@ class CreateApps(TestCase):
 class CommentTest(TestCase):
     def post(self):
         client = APIClient()
-        if (client.post('/api/comments/', {'user':'Test', 'content':'This is a test comment.'}, format="json").status_code != 201):
+        if (client.post('/api/comments/', {'appId': 11, 'user':'Test', 'content':'This is a test comment.'}, format="json").status_code != 201):
             raise Exception("Comment failed to post.")
+    def get(self):
+        client = APIClient()
+        if (client.get('/api/comments/').status_code != 200):
+            raise Exception("Failed to get all comments")
+        if (client.get('/api/comments/?id=12').status_code != 200):
+            raise Exception("Failed to get comments for specific app ID = 12.")
