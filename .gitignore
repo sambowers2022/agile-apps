@@ -1,4 +1,9 @@
 node_modules
+<<<<<<< HEAD
 server/frontend/static/frontend/
 
 
+=======
+
+server/frontend/static/frontend/bundle.js
+>>>>>>> testing
