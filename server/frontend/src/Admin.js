@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+
 
 export default function Admin(props) {
     const [data, setData] = useState([]);
+
+    const [delId, setDelId] = useState(-1);
 
     const fetchData = () => {
         fetch(`http://127.0.0.1:8000/api/pending/`, { method: "GET" })
@@ -21,18 +26,32 @@ export default function Admin(props) {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ id, approved: true, token: props.token}),
+            body: JSON.stringify({ id, approved: true, token: props.token }),
         })
             .then(response => {
                 if (response.ok) {
                     // Refresh the data when the request is successful
                     fetchData();
                 }
+                else {
+                    alert("Failed to delete element.")
+                }
             });
     };
 
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        handleDeny(delId);
+    }
+
+    const handleIdChange = (e) => {
+        setDelId(e.target.value)
+    }
+
     const handleDeny = (id) => {
+        console.log(id)
         // Send a POST request to deny the record
+        if (!confirm(`Confirm delete element of ID: ${id}`)) return;
         fetch('http://127.0.0.1:8000/api/pending/', {
             method: 'POST',
             headers: {
@@ -50,6 +69,13 @@ export default function Admin(props) {
 
     return (
         <>
+            <Form onSubmit={handleSubmit}>
+                <Form.Group>
+                    <Form.Label>App ID:</Form.Label>
+                    <Form.Control onChange={handleIdChange} type="text" />
+                </Form.Group>
+                <Button type="submit" variant="danger">DELETE</Button>
+            </Form >
             <div className='main'>
                 <table className="apps">
                     <thead>
