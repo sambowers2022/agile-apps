@@ -1,4 +1,3 @@
 node_modules
-server/frontend/static/frontend/
 
-
+server/frontend/static/frontend/bundle.js
