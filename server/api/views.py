@@ -1,16 +1,17 @@
 from django.db import IntegrityError
-from django.http import HttpResponseBadRequest, HttpResponseNotFound, JsonResponse
-from django.shortcuts import render
+from django.http import HttpResponseBadRequest, HttpResponseNotFound
+from django.shortcuts import get_object_or_404, render
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.decorators import api_view
 from rest_framework.authtoken.models import Token
-from .serializers import AppSerializer
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth import authenticate
+from django.db.models.functions import Lower
 
+
+from .serializers import AppSerializer
 from .models import App, User, Token
 
 def auth(token, auth):
@@ -63,26 +64,38 @@ def api_view(request):
     # Return API response
 
 class AppListView(APIView):
-
-
     def get(self, request):
-        page = int(request.GET.get('page', 1))  # Get the requested page number from the query parameters
-        page_size = 24  # Define the number of items per page
+        q = request.query_params
 
-        # Calculate the starting and ending indices for the pagination
-        start_index = (page - 1) * page_size
-        end_index = page * page_size
+        # Get objects sorted in given order
+        sort = q.get('order_by', 'id')
+        if (sort != 'id' and sort != 'price'):
+            sort = Lower(q.get('order_by'))
+        apps = App.objects.all().order_by(sort)
 
-        apps = App.objects.filter(approved=True)[start_index:end_index]
+        # Apply Filters
+        apps = apps.filter(approved=True).filter(org__contains=q.get('org','')).filter(desc__contains=q.get('desc','')).filter(name__contains=q.get('name',''))
+
+        # Apply platform filter
+        if (q.get('platform') is not None):
+            apps = apps.filter(platforms__name__contains=q.get('platform'))
+
+        # Apply Pagination
+        page = int(q.get('page', 1))
+        page_size = 10 # <-- Can change page size here
+        apps = apps[(page - 1) * page_size: page * page_size]
+
+        # Generate response
         serializer = AppSerializer(apps, many=True)
         return Response(serializer.data)
+    
     def post(self, request):
         serializer = AppSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+        
 class AppApprovalView(APIView):
     def get(self, request):
         apps = App.objects.filter(approved=False)
@@ -90,7 +103,6 @@ class AppApprovalView(APIView):
         return Response(serializer.data)
 
     def post(self, request):
-
         if (not auth(request.data.get('token'), 3)):
             return Response(status=status.HTTP_401_UNAUTHORIZED)
 
