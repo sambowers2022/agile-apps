@@ -26,7 +26,7 @@ export default function Admin(props) {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ id, approved: true, token: props.token }),
+            body: JSON.stringify({ id, approved: true, token: props.user.token }),
         })
             .then(response => {
                 if (response.ok) {
@@ -57,7 +57,7 @@ export default function Admin(props) {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ id, approved: false, token: props.token }),
+            body: JSON.stringify({ id, approved: false, token: props.user.token }),
         })
             .then(response => {
                 if (response.ok) {

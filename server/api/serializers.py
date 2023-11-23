@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import App, Platform
+from .models import App, Platform, Comment
 from rest_framework import serializers
 
 
@@ -25,3 +25,13 @@ class AppSerializer(serializers.ModelSerializer):
             platform, created = Platform.objects.get_or_create(**platform_data)
             app.platforms.add(platform)
         return app
+    
+class CommentSerializer(serializers.ModelSerializer):
+    username = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Comment
+        fields = ('id', 'user', 'app', 'content', 'username')
+
+    def get_username(self, obj):
+        return obj.user.username if obj.user else None

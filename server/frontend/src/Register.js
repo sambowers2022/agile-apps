@@ -35,8 +35,7 @@ function Register(props) {
     })
       .then((response) => response.json())
       .then((data) => {
-        props.token(data.token);
-        props.auth(1);
+        props.user(data);
         props.site("")
       })
       .catch((error) => {

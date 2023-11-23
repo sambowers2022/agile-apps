@@ -10,9 +10,12 @@ from rest_framework.authtoken.models import Token
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models.functions import Lower
 
+from rest_framework import generics
 
-from .serializers import AppSerializer
-from .models import App, User, Token
+
+
+from .serializers import AppSerializer, CommentSerializer
+from .models import App, User, Token, Comment
 
 def auth(token, auth):
     return Token.objects.get(token=token).user.access_level >= auth
@@ -42,7 +45,7 @@ def login(request):
             token, c = Token.objects.get_or_create(user=user)
             print(token.token)
             response_data = {'token': token.token}
-            return Response({'token': token.token, 'auth': user.access_level, 'message': 'Login successfull.'}, status=status.HTTP_200_OK)
+            return Response({'token': token.token, 'auth': user.access_level, 'id':user.id,'message': 'Login successfull.'}, status=status.HTTP_200_OK)
         else:
             return HttpResponseBadRequest()
     except User.DoesNotExist:
@@ -122,3 +125,24 @@ class AppApprovalView(APIView):
         else:
             app.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
+        
+class CommentView(APIView):
+    def get(self, request):
+        app = App.objects.get(id=request.query_params.get('id'))
+        comments = Comment.objects.filter(app=app)
+        return Response(CommentSerializer(comments, many=True).data, status=status.HTTP_200_OK)
+    def post(self, request):
+        if (not auth(request.data.get('token'), 2)):
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        try:
+            comment = Comment.objects.get(id=request.data.get('id'))
+        except Comment.DoesNotExist:
+            return Response({"detail": "Comment not found"}, status=status.HTTP_404_NOT_FOUND)
+        comment.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+        
+
+
+class CommentListCreateView(generics.ListCreateAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
