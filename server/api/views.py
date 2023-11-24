@@ -76,12 +76,28 @@ class AppListView(APIView):
             sort = Lower(q.get('order_by'))
         apps = App.objects.all().order_by(sort)
 
+        '''
+        ### Outdated Filtering system - too complex and innefficient
+
         # Apply Filters
         apps = apps.filter(approved=True).filter(org__contains=q.get('org','')).filter(desc__contains=q.get('desc','')).filter(name__contains=q.get('name',''))
 
         # Apply platform filter
         if (q.get('platform') is not None):
             apps = apps.filter(platforms__name__contains=q.get('platform'))
+        '''
+        filter = q.get('filter')
+        val = q.get('val', '')
+        print(filter, val)
+        if (filter == 'name'):
+            print(val)
+            apps = apps.filter(name__icontains=val)
+        elif (filter == 'org'):
+            apps = apps.filter(org__icontains=val)
+        elif (filter == 'desc'):
+            apps = apps.filter(desc__icontains=val)
+        elif (filter == 'platform'):
+            apps = apps.filter(platforms__name__icontains=val)
 
         # Apply Pagination
         page = int(q.get('page', 1))

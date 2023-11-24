@@ -39,7 +39,6 @@ function NewApp(props) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // Send the formData to the Django API
         const response = await fetch('http://localhost:8000/api/apps/', {
             method: 'POST',
             headers: {
@@ -48,10 +47,8 @@ function NewApp(props) {
             body: JSON.stringify(formData),
         });
         if (response.ok) {
-            // Handle success
             props.site("");
         } else {
-            // Handle error
             alert("Request Failed. Try Again.")
         }
     };
