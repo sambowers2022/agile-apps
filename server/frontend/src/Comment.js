@@ -4,7 +4,7 @@ import { Card, Button } from 'react-bootstrap';
 const Comment = ({ c, user }) => {
   const handleDelete = () => {
 
-    fetch(`http://localhost:8000/api/comments/?id=${c.app}`, {
+    fetch(`/api/comments/?id=${c.app}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -23,7 +23,7 @@ export default function Register(props) {
       return;
     }
 
-    fetch('http://localhost:8000/api/register/', {
+    fetch('/api/register/', {
       method: 'POST',
       body: JSON.stringify({
         name: formData.name,

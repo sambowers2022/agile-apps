@@ -10,7 +10,7 @@ export default function AppView({ select, setSelect, user }) {
     const [comments, setComments] = useState([]);
 
     const fetchComments = () => {
-        fetch(`http://127.0.0.1:8000/api/comments/?id=${select.id}`, { method: "GET" })
+        fetch(`/api/comments/?id=${select.id}`, { method: "GET" })
             .then(response => response.json())
             .then(json => setComments(json));
     };

@@ -17,7 +17,7 @@ class Login extends Component {
 
     handleLogin = () => {
         const { username, password } = this.state;
-        fetch('http://localhost:8000/api/login/', {
+        fetch('/api/login/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

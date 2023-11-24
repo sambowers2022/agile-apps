@@ -39,7 +39,7 @@ function NewApp(props) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const response = await fetch('http://localhost:8000/api/apps/', {
+        const response = await fetch('/api/apps/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

@@ -9,6 +9,7 @@ from rest_framework.decorators import api_view
 from rest_framework.authtoken.models import Token
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models.functions import Lower
+from django.db.models import F
 
 from rest_framework import generics
 
@@ -51,9 +52,23 @@ def login(request):
     except User.DoesNotExist:
         return HttpResponseNotFound()
 
+@api_view(['POST'])
+def permissions(request):
+    level = request.data.get('level')
+    try:
+        user = User.objects.get(username=request.data.get('username'))
+        if auth(request.data.get('token'), level):
+            user.access_level = level
+            user.save()
+            return Response({'message':'Changed user: ' + user.username + ' to level: ' + str(user.access_level)}, status=status.HTTP_200_OK )
+        else:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+    except User.DoesNotExist:
+        return HttpResponseNotFound()
+
         
 def api_view(request):
-    token = request.META.get('HTTP_AUTHORIZATION')
+    token = request.META.get('HTTP_AUTHORIZATION');
     if not token:
         return HttpResponseBadRequest()
     
@@ -70,11 +85,23 @@ class AppListView(APIView):
     def get(self, request):
         q = request.query_params
 
-        # Get objects sorted in given order
+        # Get objects sorted in the given order
         sort = q.get('order_by', 'id')
-        if (sort != 'id' and sort != 'price'):
-            sort = Lower(q.get('order_by'))
-        apps = App.objects.all().order_by(sort)
+        dir = not q.get('desc', True)
+
+        # Order case-insensitive for all fields except 'price' and 'id'
+        if sort != 'price' and sort != 'id':
+            sort = F(sort)
+            if dir:
+                apps = App.objects.all().order_by(Lower(sort).desc())
+            else:
+                apps = App.objects.all().order_by(Lower(sort))
+        else:
+            if dir:
+                apps = App.objects.all().order_by(F(sort).desc())
+            else:
+                apps = App.objects.all().order_by(sort)
+        
 
         '''
         ### Outdated Filtering system - too complex and innefficient

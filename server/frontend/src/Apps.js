@@ -11,12 +11,12 @@ export default function Apps(props) {
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [select, setSelect] = useState({})
-  const [query, setQuery] = useState({ 'page': 1, 'order_by': 'id', 'filter': '', 'val': ''});
+  const [query, setQuery] = useState({ 'page': 1, 'order_by': 'id', 'filter': '', 'val': '', 'desc': false});
 
 
   const fetchData = () => {
-    
-    fetch(`http://127.0.0.1:8000/api/apps/?page=${query.page}&order_by=${query.order_by}&filter=${query.filter}&val=${query.val}`, { method: "GET" })
+     
+    fetch(`/api/apps/?page=${query.page}&order_by=${query.order_by}&filter=${query.filter}&val=${query.val}&${query.desc ? 'desc':''}`, { method: "GET" })
       .then(response => response.json())
       .then(json => setData(json));
   };
@@ -29,9 +29,11 @@ export default function Apps(props) {
 
   const handlePageChange = (dir) => {
     setQuery({ ...query, page: query.page + dir });
-    console.log(query);
-    fetchData();
   };
+
+  useEffect(() => {
+    fetchData();
+  }, [query]);
 
   return (
     <>{JSON.stringify(select) === "{}" ?
@@ -41,6 +43,7 @@ export default function Apps(props) {
         {data.map((e) => <App a={e} setSelect={setSelect} />)}
         <div className="pagination">
           <Button variant="secondary" onClick={() => handlePageChange(-1)}>Previous</Button>
+          <Button variant="light" disabled>Page {query.page}</Button>
           <Button variant="secondary" onClick={() => handlePageChange(1)}>Next</Button>
         </div>
       </div>

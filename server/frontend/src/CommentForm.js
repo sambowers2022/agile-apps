@@ -15,7 +15,7 @@ export default function CommentForm({ app, user, update }) {
 
     return (
         <Form
-            action="http://localhost:8000/api/post/"
+            action="/api/post/"
             method="POST"
             onSubmit={(e) => {
                 e.preventDefault();
