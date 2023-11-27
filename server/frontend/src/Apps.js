@@ -53,7 +53,7 @@ export default function Apps(props) {
 
 }
 
-/* OLD RETURN
+/* OLD APPS TABLE
 <>
        (<div className='main'>
 

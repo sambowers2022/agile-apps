@@ -40,8 +40,8 @@ export default function Admin(props) {
         })
             .then(response => {
                 if (response.ok) {
-                    // Refresh the data when the request is successful
-                    fetchData();
+                    // Refresh the data
+                    fetchData();    
                 }
                 else {
                     alert("Failed to delete element.");
@@ -58,14 +58,13 @@ export default function Admin(props) {
             },
             body: JSON.stringify({ token: props.user.token, username: promote.username, level: getLevel() })
         })
-            .then(response => {
-                if (response.ok) {
-                    alert(response.message);
-                }
-                else {
-                    alert("Invalid permissions/Invalid username")
-                }
-            })
+        .then(response => response.json())
+        .then(data => {
+          alert(data.message);
+        })
+        .catch(error => {
+          alert("Invalid permissions/Invalid username")
+        });
     };
 
     const handleSubmit = (e) => {
@@ -78,10 +77,10 @@ export default function Admin(props) {
     }
 
     const handleUserChange = (e) => {
-        setPromote({ ...promote, username: e.target.value})
+        setPromote({ ...promote, username: e.target.value })
     }
     const handleSelect = (e) => {
-        setPromote({ ...promote, selected: e})
+        setPromote({ ...promote, selected: e })
     }
 
     const handleDeny = (id) => {
@@ -97,7 +96,7 @@ export default function Admin(props) {
         })
             .then(response => {
                 if (response.ok) {
-                    // Refresh the data when the request is successful
+                    // Refresh the data
                     fetchData();
                 }
             });

@@ -1,4 +1,3 @@
-/* Add a black background color to the top navigation */
 #app {
     margin: 0;
     padding: 0;
@@ -21,7 +20,6 @@ body {
     width: 100%;
 }
 
-/* Style the links inside the navigation bar */
 .topnav a {
     float: left;
     color: #f2f2f2;
@@ -31,26 +29,22 @@ body {
     font-size: 17px;
 }
 
-/* Style the list items (li) within the navigation bar */
 .topnav ul {
     list-style: none;
     margin: 0;
     padding: 0;
 }
 
-/* Style the #login list item to float to the right */
 .topnav #login {
     float: right;
-    margin-left: 10px; /* Add some spacing between #login and other items */
+    margin-left: 10px;
 }
 
-/* Change the color of links on hover */
 .topnav a:hover {
     background-color: #ddd;
     color: black;
 }
 
-/* Add a color to the active/current link */
 .topnav a.active {
     background-color: #04AA6D;
     color: white;

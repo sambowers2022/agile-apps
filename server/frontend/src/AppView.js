@@ -27,11 +27,12 @@ export default function AppView({ select, setSelect, user }) {
             {/* Add App info */}
             <App a={select} />
 
-            {/* Add Comment Submission */}
+            {/* Comment Submission -only show to logged in users*/}
             {JSON.stringify(user) === '{}' ? <></> :
                 <CommentForm app={select} user={user} update={fetchComments} />}
+
             {/* Map Comments*/}
-            <div>{comments.map((c) => <Comment c={c} user={user} />)}</div>
+            <div>{comments.map((c) => <Comment refresh={fetchComments} c={c} user={user} />)}</div>
         </>
     );
 };

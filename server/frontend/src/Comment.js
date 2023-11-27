@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, Button } from 'react-bootstrap';
 
-const Comment = ({ c, user }) => {
+const Comment = ({ refresh, c, user }) => {
   const handleDelete = () => {
 
     fetch(`/api/comments/?id=${c.app}`, {
@@ -14,13 +14,8 @@ const Comment = ({ c, user }) => {
         id: c.id,
       }),
     })
-      .then(response => response.json())
-      .then(data => {
-        // Handle the response data as needed
-        console.log('Post successful:', data);
-      })
+      .then(() => refresh()) // Refresh comments on delete
       .catch(error => {
-        // Handle errors
         console.error('Error:', error);
       });
   }

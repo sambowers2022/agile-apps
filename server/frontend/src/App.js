@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, Card, ListGroup, Stack } from 'react-bootstrap';
 
 export default function App({ a, setSelect }) {
-    return <Card bg="primary" text="white">
+    return <Card bg="primary" text="white" id={a.id}>
         <Card.Body>
             <Card.Title><a className="text-white" onClick={() => setSelect(a)} href="#">{a.name}</a></Card.Title>
             <Card.Text>{a.desc}</Card.Text>

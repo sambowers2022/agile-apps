@@ -43,8 +43,6 @@ export default function Filter({ query, setQuery, fetch }) {
                     <Dropdown.Item onClick={() => handleInputChange('order_by', 'price')}>Price</Dropdown.Item>
                     <Dropdown.Item onClick={() => handleInputChange('order_by', 'name')}>Name</Dropdown.Item>
                     <Dropdown.Item onClick={() => handleInputChange('order_by', 'org')}>Organization</Dropdown.Item>
-                    {/* <Dropdown.Item onClick={() => handleInputChange('order_by', 'platforms')}>Platforms</Dropdown.Item> */}
-                    {/* <Dropdown.Item onClick={() => handleInputChange('order_by', 'desc')}>Description</Dropdown.Item> */}
                 </Dropdown.Menu>
             </Dropdown>
             <Button variant="light" onClick={() => toggleDesc()}>

@@ -29,12 +29,10 @@ export default function CommentForm({ app, user, update }) {
                 })
                     .then(response => response.json())
                     .then(data => {
-                        // Handle the response data as needed
-                        console.log('Post successful:', data);
+                        console.log('Post successful:', data); // Show response
                         update();
                     })
                     .catch(error => {
-                        // Handle errors
                         console.error('Error:', error);
                     });
             }}>
