@@ -27,7 +27,6 @@ class Token(models.Model):
     
     def __str__(self):
         return self.token
-
     
 class Platform(models.Model):
     name = models.CharField(max_length=100)
@@ -46,3 +45,8 @@ class App(models.Model):
 
     def __str__(self):
         return self.name
+
+class Comment(models.Model):
+    user = models.ForeignKey("User",on_delete=models.CASCADE)
+    app = models.ForeignKey("App",on_delete=models.CASCADE)
+    content = models.CharField(max_length=500)

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-function Register(props) {
+export default function Register(props) {
   const [formData, setFormData] = useState({
     name: '',
     pwd: '',
@@ -23,7 +23,7 @@ function Register(props) {
       return;
     }
 
-    fetch('http://localhost:8000/api/register/', {
+    fetch('/api/register/', {
       method: 'POST',
       body: JSON.stringify({
         name: formData.name,
@@ -35,8 +35,7 @@ function Register(props) {
     })
       .then((response) => response.json())
       .then((data) => {
-        props.token(data.token);
-        props.auth(1);
+        props.user(data);
         props.site("")
       })
       .catch((error) => {
@@ -83,5 +82,3 @@ function Register(props) {
     </div>
   );
 }
-
-export default Register;

@@ -9,10 +9,14 @@ from rest_framework.decorators import api_view
 from rest_framework.authtoken.models import Token
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models.functions import Lower
+from django.db.models import F
+
+from rest_framework import generics
 
 
-from .serializers import AppSerializer
-from .models import App, User, Token
+
+from .serializers import AppSerializer, CommentSerializer
+from .models import App, User, Token, Comment
 
 def auth(token, auth):
     return Token.objects.get(token=token).user.access_level >= auth
@@ -42,15 +46,29 @@ def login(request):
             token, c = Token.objects.get_or_create(user=user)
             print(token.token)
             response_data = {'token': token.token}
-            return Response({'token': token.token, 'auth': user.access_level, 'message': 'Login successfull.'}, status=status.HTTP_200_OK)
+            return Response({'token': token.token, 'auth': user.access_level, 'id':user.id,'message': 'Login successfull.'}, status=status.HTTP_200_OK)
         else:
             return HttpResponseBadRequest()
     except User.DoesNotExist:
         return HttpResponseNotFound()
 
+@api_view(['POST'])
+def permissions(request):
+    level = request.data.get('level')
+    try:
+        user = User.objects.get(username=request.data.get('username'))
+        if auth(request.data.get('token'), level):
+            user.access_level = level
+            user.save()
+            return Response({'message':'Changed user: ' + user.username + ' to level: ' + str(user.access_level)}, status=status.HTTP_200_OK )
+        else:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+    except User.DoesNotExist:
+        return HttpResponseNotFound()
+
         
 def api_view(request):
-    token = request.META.get('HTTP_AUTHORIZATION')
+    token = request.META.get('HTTP_AUTHORIZATION');
     if not token:
         return HttpResponseBadRequest()
     
@@ -67,11 +85,26 @@ class AppListView(APIView):
     def get(self, request):
         q = request.query_params
 
-        # Get objects sorted in given order
+        # Get objects sorted in the given order
         sort = q.get('order_by', 'id')
-        if (sort != 'id' and sort != 'price'):
-            sort = Lower(q.get('order_by'))
-        apps = App.objects.all().order_by(sort)
+        dir = not q.get('desc', True)
+
+        # Order case-insensitive for all fields except 'price' and 'id'
+        if sort != 'price' and sort != 'id':
+            sort = F(sort)
+            if dir:
+                apps = App.objects.all().order_by(Lower(sort).desc())
+            else:
+                apps = App.objects.all().order_by(Lower(sort))
+        else:
+            if dir:
+                apps = App.objects.all().order_by(F(sort).desc())
+            else:
+                apps = App.objects.all().order_by(sort)
+        
+
+        '''
+        ### Outdated Filtering system - too complex and innefficient
 
         # Apply Filters
         apps = apps.filter(approved=True).filter(org__contains=q.get('org','')).filter(desc__contains=q.get('desc','')).filter(name__contains=q.get('name',''))
@@ -79,6 +112,19 @@ class AppListView(APIView):
         # Apply platform filter
         if (q.get('platform') is not None):
             apps = apps.filter(platforms__name__contains=q.get('platform'))
+        '''
+        filter = q.get('filter')
+        val = q.get('val', '')
+        print(filter, val)
+        if (filter == 'name'):
+            print(val)
+            apps = apps.filter(name__icontains=val)
+        elif (filter == 'org'):
+            apps = apps.filter(org__icontains=val)
+        elif (filter == 'desc'):
+            apps = apps.filter(desc__icontains=val)
+        elif (filter == 'platform'):
+            apps = apps.filter(platforms__name__icontains=val)
 
         # Apply Pagination
         page = int(q.get('page', 1))
@@ -122,3 +168,24 @@ class AppApprovalView(APIView):
         else:
             app.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
+        
+class CommentView(APIView):
+    def get(self, request):
+        app = App.objects.get(id=request.query_params.get('id'))
+        comments = Comment.objects.filter(app=app)
+        return Response(CommentSerializer(comments, many=True).data, status=status.HTTP_200_OK)
+    def post(self, request):
+        if (not auth(request.data.get('token'), 2)):
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        try:
+            comment = Comment.objects.get(id=request.data.get('id'))
+        except Comment.DoesNotExist:
+            return Response({"detail": "Comment not found"}, status=status.HTTP_404_NOT_FOUND)
+        comment.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+        
+
+
+class CommentListCreateView(generics.ListCreateAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer

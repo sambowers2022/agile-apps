@@ -17,7 +17,7 @@ class Login extends Component {
 
     handleLogin = () => {
         const { username, password } = this.state;
-        fetch('http://localhost:8000/api/login/', {
+        fetch('/api/login/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -35,9 +35,8 @@ class Login extends Component {
                 }
             })
             .then(data => {
-                // Access the 'token' field from the parsed JSON response
-                this.props.token(data.token);
-                this.props.auth(data.auth);
+                this.props.user(data);
+                console.log(data);
                 this.props.site("");
             })
             .catch(error => {
