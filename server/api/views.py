@@ -29,7 +29,7 @@ def register(request):
     try:
         user = User.objects.create_user(username, password)
         token = Token.objects.create(user=user)
-        return Response({'token': token.token,'message': 'User created successfully'}, status=status.HTTP_201_CREATED)
+        return Response({'token': token.token, 'auth': user.access_level, 'id':user.id,'message': 'Login successfull.'}, status=status.HTTP_201_CREATED)
     except IntegrityError:
         return Response({'error': 'Username already exists'}, status=status.HTTP_400_BAD_REQUEST)
 

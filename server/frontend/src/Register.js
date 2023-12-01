@@ -36,7 +36,7 @@ export default function Register(props) {
     })
       .then((response) => response.json())
       .then((data) => {
-        props.user(data);
+        props.user(...data);
         props.site("")
       })
       .catch((error) => {
