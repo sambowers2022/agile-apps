@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 
+// Simple form to submit an application entry.
 function NewApp(props) {
     const [formData, setFormData] = useState({
         name: '',

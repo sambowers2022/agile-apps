@@ -5,6 +5,7 @@ import Comment from './Comment';
 import App from "./App"
 import CommentForm from "./CommentForm"
 
+// View for when an app is clicked on to also show comments.
 export default function AppView({ select, setSelect, user }) {
 
     const [comments, setComments] = useState([]);

@@ -9,11 +9,12 @@ import './style.css'
 
 const root = createRoot(document.getElementById("app"));
 
+// Wrapper for the entire application.
 function MainApp() {
   const [site, setSite] = useState(""); // Default to "App"
   const [user, setUser] = useState({})
 
- 
+  // Handle which sub-page is being rendered
   const renderSite = () => {
     switch (site) {
       case "":
@@ -35,6 +36,7 @@ function MainApp() {
 
   return (
     <>
+    {/* Navbar */}
       <div className="topnav">
         <ul>
           <li key='0'><a href="#" onClick={() => setSite("")}>Agile Apps</a></li>
@@ -49,9 +51,11 @@ function MainApp() {
           }}>Logout</a>}</li>
         </ul>
       </div>
+      {/* Sub-Page that is opened */}
       {renderSite()}
     </>
   );
 }
 
+// Renders everything
 root.render(<MainApp />);

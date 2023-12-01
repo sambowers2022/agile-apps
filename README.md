@@ -2,35 +2,41 @@
 
 ### By 2001 Development
 
-##### Project for CSE 201
----
-
-Project uses React + Webpack + Django + Django REST Framework + SQLite.
-
-First make sure you have npm and python3 installed.
-
-```cd server```
-
-```npm install webpack```
-
-This next command will be used to compile front end code:
-
-```npm run dev```
-
----
-
-In another terminal (Also navigated to agile-apps/server)
-
-```pip install -r requirements.txt```
-
-This command will run the backend server:
-
-```python manage.py runserver```
-
-
----
 Members: 
 - Sam Bowers
 - Eric Ekwenibe
 - Luke Hostettler
 - David Staub
+
+##### Project for CSE 201
+---
+
+Project uses React + Webpack + Django + Django REST Framework + SQLite.
+
+---
+
+### Build Instructions
+
+```cd agile-apps/server/```
+
+Make sure you have python installed, and then run:
+
+```pip install -r requirements.txt```
+
+This command will then launch the server:
+
+```python manage.py runserver```
+
+---
+
+If you have issues with the port being blocked, instead use:
+
+```python manage.py runserver localhost:PORT```
+
+You can change PORT to any other number (default is 8000), until you get it to run.
+
+---
+
+Website should now be accessible at localhost:8000 on your browser (or whatever port you chose).
+
+NOTE: some may need to use pip3 and python3 instead of pip and python depending on your set-up.

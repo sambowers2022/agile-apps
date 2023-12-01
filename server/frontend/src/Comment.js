@@ -1,9 +1,10 @@
 import React from 'react';
 import { Card, Button } from 'react-bootstrap';
 
+// Creates a card representing object c.
 const Comment = ({ refresh, c, user }) => {
+  // Method for moderators to delete comments
   const handleDelete = () => {
-
     fetch(`/api/comments/?id=${c.app}`, {
       method: 'POST',
       headers: {
@@ -25,8 +26,9 @@ const Comment = ({ refresh, c, user }) => {
       <Card.Body>
         <Card.Title>{c.username}</Card.Title>
         <Card.Text>{c.content}</Card.Text>
+        {/* Only show delete button to moderators and above */}
         {user.auth > 1 ? <Button variant="danger" onClick={handleDelete}>
-          Delete Comment
+          Delete Comment 
         </Button> : <></>}
       </Card.Body>
     </Card>

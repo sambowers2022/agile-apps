@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 
+// Basic user registration form.
 export default function Register(props) {
   const [formData, setFormData] = useState({
     name: '',

@@ -4,7 +4,7 @@ import Form from 'react-bootstrap/Form';
 import Stack from 'react-bootstrap/Stack';
 import Dropdown from 'react-bootstrap/Dropdown';
 
-
+// View for admins/moderators: takes in user object as props.
 export default function Admin(props) {
     const [data, setData] = useState([]);
 
@@ -12,6 +12,7 @@ export default function Admin(props) {
 
     const [promote, setPromote] = useState({ username: '', selected: 'User' })
 
+    // Get pending apps.
     const fetchData = () => {
         fetch(`/api/pending/`, { method: "GET" })
             .then(response => response.json())
@@ -29,6 +30,7 @@ export default function Admin(props) {
         return 1;
     };
 
+    // Call api to approve a given application.
     const handleApprove = (id) => {
         // Send a POST request to approve the record
         fetch('/api/pending/', {
@@ -41,7 +43,7 @@ export default function Admin(props) {
             .then(response => {
                 if (response.ok) {
                     // Refresh the data
-                    fetchData();    
+                    fetchData();
                 }
                 else {
                     alert("Failed to delete element.");
@@ -49,6 +51,7 @@ export default function Admin(props) {
             });
     };
 
+    // Call perms api to change a users permissions.
     const handlePromote = (e) => {
         e.preventDefault();
         fetch('/api/perms/', {
@@ -58,24 +61,26 @@ export default function Admin(props) {
             },
             body: JSON.stringify({ token: props.user.token, username: promote.username, level: getLevel() })
         })
-        .then(response => response.json())
-        .then(data => {
-          alert(data.message);
-        })
-        .catch(error => {
-          alert("Invalid permissions/Invalid username")
-        });
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+            })
+            .catch(error => {
+                alert("Invalid permissions/Invalid username")
+            });
     };
 
+    // Handle delete element form
     const handleSubmit = (e) => {
         e.preventDefault();
+        // Reuse deny method as it also just deletes an app
         handleDeny(delId);
     }
 
+    // Methods to handle form elements updating
     const handleIdChange = (e) => {
         setDelId(e.target.value)
     }
-
     const handleUserChange = (e) => {
         setPromote({ ...promote, username: e.target.value })
     }
@@ -83,6 +88,7 @@ export default function Admin(props) {
         setPromote({ ...promote, selected: e })
     }
 
+    // Method to delete an application of given id.
     const handleDeny = (id) => {
         console.log(id)
         // Send a POST request to deny the record

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Form, Button, FloatingLabel } from 'react-bootstrap';
 
+// Form to post a comment.
 export default function CommentForm({ app, user, update }) {
     const [formData, setFormData] = useState({
         user: user.id,
@@ -8,6 +9,7 @@ export default function CommentForm({ app, user, update }) {
         content: ''
     });
 
+    // Handle form fields changing and update their respective values.
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });

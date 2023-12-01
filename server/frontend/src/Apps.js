@@ -6,17 +6,17 @@ import AppView from './AppView'
 import Filter from './Filter'
 import { render } from 'react-dom';
 
-
+// Main view showing all of the apps: takes in user object.
 export default function Apps(props) {
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [select, setSelect] = useState({})
-  const [query, setQuery] = useState({ 'page': 1, 'order_by': 'id', 'filter': '', 'val': '', 'desc': false});
+  const [query, setQuery] = useState({ 'page': 1, 'order_by': 'id', 'filter': '', 'val': '', 'desc': false });
 
-
+  // Method to retreive apps from api.
   const fetchData = () => {
-     
-    fetch(`/api/apps/?page=${query.page}&order_by=${query.order_by}&filter=${query.filter}&val=${query.val}&${query.desc ? 'desc':''}`, { method: "GET" })
+
+    fetch(`/api/apps/?page=${query.page}&order_by=${query.order_by}&filter=${query.filter}&val=${query.val}&${query.desc ? 'desc' : ''}`, { method: "GET" })
       .then(response => response.json())
       .then(json => setData(json));
   };
@@ -52,39 +52,3 @@ export default function Apps(props) {
   );
 
 }
-
-/* OLD APPS TABLE
-<>
-       (<div className='main'>
-
-        {<table className="apps">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Description</th>
-              <th>Organization</th>
-              <th>Platforms</th>
-              <th>Price</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((e) => (
-              <tr className="appsRow" id={e.id}>
-                <td><a onClick={()=>setSelect(e)} href="#">{e.name}</a></td>
-                <td>{e.desc}</td>
-                <td>{e.org}</td>
-                <td>{e.platforms.map(p =>
-                  <a href={p.link} target="_blank">{p.name} </a>
-                )}</td>
-                <td>{e.price == 0 ? 'Free' : '$' + e.price}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>}
-        <div className="pagination">
-          <button className="btn btn-primary" onClick={() => handlePageChange(-1)}>Previous</button>
-          <button className="btn btn-primary" onClick={() => handlePageChange(1)}>Next</button>
-        </div>
-      </div>) : <App select={select} setSelect={setSelect}/>}
-    </> 
-    */
