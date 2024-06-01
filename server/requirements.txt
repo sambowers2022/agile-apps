@@ -1,5 +1,5 @@
 Django==4.2.6
 django-cors-headers==4.3.0
 django-webpack-loader==2.0.1
-djangorestframework==3.14.0i
+djangorestframework==3.14.0
 Faker==20.0.1

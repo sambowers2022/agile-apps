@@ -8,10 +8,17 @@ Members:
 - Luke Hostettler
 - David Staub
 
-##### Project for CSE 201
+##### Project for CSE 201, archived for future reference.
 ---
 
 Project uses React + Webpack + Django + Django REST Framework + SQLite.
+
+
+---
+
+### Demonstration
+
+[Link to mobile demonstration video on youtube](https://www.youtube.com/watch?v=AlQj2QVmjlU&t=1s)
 
 ---
 
@@ -19,9 +26,9 @@ Project uses React + Webpack + Django + Django REST Framework + SQLite.
 
 ```cd agile-apps/server/```
 
-Make sure you have python installed, and then run:
+Make sure you have python and venv installed, and then run:
 
-```pip install -r requirements.txt```
+```source venv/bin/activate```
 
 This command will then launch the server:
 
